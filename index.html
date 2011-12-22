@@ -1,0 +1,469 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js ie6" lang="en"> <![endif]-->
+<!--[if IE 7]>    <html class="no-js ie7" lang="en"> <![endif]-->
+<!--[if IE 8]>    <html class="no-js ie8" lang="en"> <![endif]-->
+<!--[if gt IE 8]><!-->  <html class="no-js" lang="en"> <!--<![endif]-->
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+
+    <title>WebKit &amp; Perl</title>
+
+    <meta name="description" content="WebKit &amp; Perl">
+    <meta name="author" content="Emmanuel Rodriguez">
+    <meta name="viewport" content="width=1024, user-scalable=no">
+
+    <!-- Core and extension CSS files -->
+    <link rel="stylesheet" href="core/deck.core.css">
+    <link rel="stylesheet" href="extensions/goto/deck.goto.css">
+    <link rel="stylesheet" href="extensions/menu/deck.menu.css">
+    <link rel="stylesheet" href="extensions/navigation/deck.navigation.css">
+    <link rel="stylesheet" href="extensions/status/deck.status.css">
+    <link rel="stylesheet" href="extensions/hash/deck.hash.css">
+
+    <!-- Theme CSS files (menu swaps these out) -->
+    <link rel="stylesheet" id="style-theme-link" href="themes/style/swiss.css">
+    <link rel="stylesheet" id="transition-theme-link" href="themes/transition/horizontal-slide.css">
+
+    <!-- Custom CSS just for this page -->
+    <link rel="stylesheet" href="main.css">
+
+    <script src="js/modernizr.custom.js"></script>
+
+
+    <!-- Syntax highlighting -->
+    <link rel="stylesheet" id="style-theme-link" href="themes/code/idea.css">
+    <script src="js/highlight.pack.js"></script>
+    <script>
+        hljs.tabReplace = '    ';
+        hljs.initHighlightingOnLoad();
+    </script>
+</head>
+
+<body class="deck-container">
+
+
+<section class="slide">
+    <br/><br/>
+    <img src="images/webkit.png" alt="WebKit">
+    <h1>
+        &amp; <br/>
+        Perl <br/>
+        <br/>
+        <p style="font-size: 50%">
+            by <br/>
+            Emmanuel Rodriguez
+        </p>
+    </h1>
+    <br>
+    <div style="position: absolute; bottom: 1em; right:1em;">WebKit & Perl  - v1</div>
+</section>
+
+
+<section class="slide">
+    <h2>What is WebKit?</h2>
+    <p>It's an open source web browser <strong>engine</strong> (not a browser).</p>
+    <p>A fork of KHTML (Konqueror) by Apple.</p>
+
+    <h2>It's a library</h2>
+    <p>Composed of 2 sub libraries:</p>
+    <ul>
+        <li>WebCore (HTML rendering engine)</li>
+        <li>JavaScriptCore (JavaScript engine)</li>
+    </ul>
+    <p>With bindings for multiple languages (including Perl).</p>
+
+</section>
+
+
+<section class="slide">
+    <h2>Used by</h2>
+    <h3>Browsers</h3>
+    <p>Safari, Google Chrome, Epiphany, Konqueror</p>
+
+    <h3>Applications</h3>
+    <p>Mail.app, Entourage (OS X), Steam</p>
+
+    <h3>OSes</h3>
+    <p>iOS, Android, Kindle</p>
+
+    <h3>Toolkits</h3>
+    <p>Cocoa, Qt, Gtk, SDL, WxWidgets, Win32, Adobe AIR</p>
+</section>
+
+
+<section class="slide">
+    <h2>Web technologies</h2>
+    <ul>
+        <li>HTML 4 and 5</li>
+        <li>JavaScript</li>
+        <li>CSS 1, 2 (almost complete) and 3 (incomplete)</li>
+        <li>DOM</li>
+        <li>SVG</li>
+        <li>XML and XSLT (through libxslt)</li>
+    </ul>
+</section>
+
+
+<section class="slide">
+    <h2>Why use WebKit?</h2>
+    <p>If it quacks like a duck, acts like a duck, ...</p>
+
+    <ul>
+        <li>Executes JavaScript</li>
+        <li>Loads derived resources (stylesheets, iframes, favicon, ...)</li>
+        <li>Loads resources like a browser does (limited connections, etc)</li>
+    </ul>
+</section>
+
+
+<section class="slide">
+    <h2>Using WebKit with Perl</h2>
+    <p>Multiple bindings exist for WebKit in CPAN:</p>
+    <ul>
+      <li>Gtk2::WebKit - hand written</li>
+      <li>Gtk3::WebKit - Glib introspection (GIR) generated at runtime</li>
+    </ul>
+
+    <h2>GIR</h2>
+    <p>Automatic language bindings generated at runtime</p>
+    <p>GNOME desktop uses this for all its new bindings</p>
+    <p>Material for a separate talk</p>
+</section>
+
+
+<section class="slide">
+    <h2>How can we use WebKit?</h2>
+    <p>Besides writing a web browser? :)</p>
+    <p>Custom GUIs with HTML, CSS and JS (ex: control rooms monitors)<p>
+    <p>Web page profiling (ex: page size, resources, download time)</p>
+
+    <h2>Automation</h2>
+    <ul>
+        <li>JavaScript interaction</li>
+        <li>Network stack (via libsoup)</li>
+        <li>DOM</li>
+        <li>Screenshots (PNG, PDF, SVG, PostScript)</li>
+        <li>Web scrapping</li>
+    </ul>
+</section>
+
+<section class="slide">
+    <h2>Web Inspector</h2>
+    <p>We can rewrite/automate the functionalities of the Web Inspector</p>
+    <img src="images/inspector.png">
+</section>
+
+
+<section class="slide">
+    <h1>Code examples</h1>
+</section>
+
+
+<section class="slide">
+    <h2>Simple web browser</h2>
+    <pre><code class="perl">use Gtk3 -init;
+use Gtk3::WebKit;
+
+# Build a WebKit frame
+my $view = Gtk3::WebKit::WebView->new();
+$view->load_uri('http://search.cpan.org/perldoc?Gtk3::WebKit');
+
+# Widget packing
+my $window = Gtk3::Window->new('toplevel');
+my $scrolls = Gtk3::ScrolledWindow->new();
+$scrolls->add($view);
+$window->add($scrolls);
+$window->set_default_size(800, 600);
+$window->show_all();
+$window->signal_connect(destroy => sub { Gtk3->main_quit() });
+
+# Main loop
+Gtk3->main();</code></pre>
+
+    <br/>
+    <p>Code: <a href="examples/browser.pl">browser.pl</a></p>
+</section>
+
+
+<section class="slide">
+    <h2>Simple web browser (pic)</h2>
+    <img src="images/example-browser.png">
+</section>
+
+
+<section class="slide">
+    <h2>Execute JavaScript</h2>
+    <pre><code class="perl"># Execute a JavaScript command as soon as the page is loaded
+$view->signal_connect('notify::load-status' => sub {
+
+    # Wait for the page to be loaded
+    return unless $view->get_uri and $view->get_load_status eq 'finished';
+
+    # Execute jQuery (the page must have jQuery loaded already)
+    $view->execute_script(q{
+        $('img').hide();
+    });
+});</code></pre>
+
+    <br/>
+    <p>Code: <a href="examples/javascript.pl">javascript.pl</a></p>
+</section>
+
+<section class="slide">
+    <h2>Execute JavaScript (pic)</h2>
+    <img src="images/example-javascript.png">
+</section>
+
+
+<section class="slide">
+    <h2>PDF screenshot</h2>
+    <p>Use Cairo for saving a page as PDF</p>
+
+    <pre><code class="perl"># With Gtk3 we can use offscreen rendering!
+my $window = Gtk3::OffscreenWindow->new();
+$window->add($view);
+$window->show_all();
+
+# Save the page as PDF file once loaded
+$view->signal_connect('notify::load-status' => sub {
+    return unless $view->get_uri and $view->get_load_status eq 'finished';
+
+    # Use Cairo to grab a PDF (we can also use SVG, PostScript or PNG)
+    use Cairo::GObject;
+    my $width = $view->get_allocated_width;
+    my $height = $view->get_allocated_height;
+    my $surface = Cairo::PdfSurface->create("screenshot.pdf", $width, $height);
+    my $cr = Cairo::Context->create($surface);
+    $view->draw($cr);
+
+    Gtk3->main_quit();
+});</code></pre>
+
+    <br/>
+    <p>Code: <a href="examples/pdf.pl">pdf.pl</a></p>
+    <p>Run with: <code>xvfb-run --server-args="-screen 0 1024x768x24" pdf.pl</code></p>
+
+</section>
+
+
+<section class="slide">
+    <h2>PDF screenshot (pic)</h2>
+    <p>Text is selectable!</p>
+    <img src="images/example-pdf.png">
+</section>
+
+
+<section class="slide">
+    <h2>Resource tracking</h2>
+    <p>Show the download time of each resource</p>
+
+    <pre><code class="perl">use HTTP::Soup;
+
+# Get the session that's responsible for all HTTP access made by WebKit GTK
+my $session = Gtk3::WebKit->get_default_session();
+
+# Track all download requests
+$session->signal_connect('request-started' => sub {
+    my ($session, $message, $socket, $resources) = @_;
+
+    # A new download request starts
+    my $url = $message->get_uri->to_string(0);
+    my $start = time;
+
+    # Track the when the download finishes
+    $message->signal_connect(finished => sub {
+        my $elapsed = time - $start;
+        my $status_code = $message->get('status-code') // 'N/A';
+        print "$url $elapsed seconds, status code $status_code\n";
+    });
+});</code></pre>
+
+    <br/>
+    <p>Code: <a href="examples/resources.pl">resources.pl</a></p>
+</section>
+
+
+<section class="slide">
+<h2>Nanny</h2>
+    <p>Control which pages can be loaded or not (clicks ONLY)</p>
+    <pre><code class="perl">use URI;
+my $allowed_dest = URI->new($uri)->host_port;
+
+# Intercept all web pages requests and reject all requests that will bring us
+# to an external web site. This works only for the iframes and links that have
+# been clicked by the user.
+# *** JavaScript and CSS are not blocked! ***
+$view->signal_connect('navigation-policy-decision-requested' => sub {
+    my ($view, $frame, $request, $action, $decision) = @_;
+
+    my $uri = $request->get_uri or return;
+    return if $uri eq 'about:blank';
+
+    # Accept the request only if we stay in the same site
+    my $dest = URI->new($uri)->host_port;
+    return if $dest eq $allowed_dest;
+
+    # Reject all requests going to a different site
+    print "Access denied $dest\n";
+    $decision->ignore();
+    return 1;
+});
+</code></pre>
+
+    <br/>
+    <p>Code: <a href="examples/nanny.pl">nanny.pl</a></p>
+</section>
+
+
+<section class="slide">
+    <h2>Über Nanny</h2>
+    <p>Control which resoure can be loaded or not (works on everything)</p>
+    <pre><code class="perl">use URI;
+my $allowed_dest = URI->new($uri)->host_port;
+
+# Block ANY resource that goes to an external site. This works for all resources.
+# Even for resources that are built at runtime through JavaScript.
+$view->signal_connect('resource-request-starting' => sub {
+    my ($view, $frame, $resource, $request, $response) = @_;
+
+    my $uri = $request->get_uri or return;
+    return if $uri eq 'about:blank';
+
+    my $dest = URI->new($uri)->host_port;
+    return if $dest eq $allowed_dest or $dest =~ /\.(ultra)?bstatic\.com:/;
+
+    # Block requests to an external URI, 'about:blank' is never downloaded.
+    print "Access denied $dest\n";
+    $request->set_uri('about:blank');
+});</code></pre>
+
+    <br/>
+    <p>Code: <a href="examples/uber-nanny.pl">uber-nanny.pl</a></p>
+</section>
+
+
+<section class="slide">
+    <h2>DOM traversal</h2>
+    <pre><code class"perl">use Gtk3::WebKit ':node_types';
+
+# Show which elements match the given CSS rules
+find_elements_for_selectors(
+    $view->get_dom_document->get_body,
+    'div.featpostcard', 'td.c2name > a.hotelname'
+);
+
+sub find_elements_for_selectors {
+    my ($node, @selectors) = @_;
+
+    # Check if the current element matches the CSS rules
+    if ($node->get_node_type == ELEMENT_NODE) {
+        foreach my $selector (@selectors) {
+            next unless $node->webkit_matches_selector($selector);
+            printf "%s matches %s\n", $node->get_tag_name, $selector;
+        }
+    }
+
+    # Recurse through the child nodes
+    my $child_nodes = $node->get_child_nodes;
+    my $length = $child_nodes->get_length;
+    for (my $i = 0; $i < $length; ++$i) {
+        my $child = $child_nodes->item($i);
+        find_elements_for_selectors($child, @selectors);
+    }
+}</pre></code>
+
+    <br/>
+    <p>Code: <a href="examples/dom.pl">dom.pl</a></p>
+</section>
+
+
+<section class="slide">
+    <h2>XPath</h2>
+    <p>Find all elements that define CSS rules (&lt;style&gt; and &lt;link&gt;)</p>
+
+    <pre><code class="perl">use Gtk3::WebKit ':xpath_results';
+
+# XPath to find 'style' and 'link stylesheet'
+my $doc = $view->get_dom_document;
+my $xpath_results = $doc->evaluate(
+    '//style | //link[@rel="stylesheet" and @type="text/css" and @href]',
+    $doc,
+    $doc->create_ns_resolver($doc),
+    ORDERED_NODE_SNAPSHOT_TYPE,
+    undef
+);
+
+# Show the CSS
+my $length = $xpath_results->get_snapshot_length;
+for (my $i = 0; $i < $length; ++$i) {
+    my $element = $xpath_results->snapshot_item($i);
+
+    my $tag_name = $element->get_tag_name;
+    if ($tag_name eq 'STYLE') {
+        my $css_content = $element->get_first_child->get_text_content;
+        print "CSS: $css_content\n";
+    }
+    elsif ($tag_name eq 'LINK')  {
+        my $href = $element->get_attribute('href');
+        print "LINK: $href\n";
+    }
+}</code></pre>
+
+    <br/>
+    <p>Code: <a href="examples/xpath.pl">xpath.pl</a></p>
+</section>
+
+
+<section class="slide">
+    <h2>Real life examples</h2>
+    <p>Find more scripts in github: <a href="https://github.com/potyl/Webkit">https://github.com/potyl/Webkit</a></p>
+
+    <h3>Some of the scripts</h3>
+    <ul>
+        <li>s5pdf - save a S5 presentation to PDF</li>
+        <li>deck2pdf - save a Deck.JS presentation to PDF</li>
+        <li>screenshot.pl - screenshot a page or section as pdf, ps, png or svg</li>
+        <li>css-rules-usage.pl - report CSS rules that are declared but not used</li>
+        <li>nanny.pl - very simple parental control</li>
+        <li>downloads.pl - track the downloads for one page</li>
+        <li>har.pl - generate HTTP Archive (HAR) files</li>
+    </ul>
+
+    <h3>This slides</h3>
+    <ul>
+        <li>HTML - <a href="https://github.com/potyl/Talk-WebKit-Perl/">https://github.com/potyl/Talk-WebKit-Perl/</a></li>
+        <li>PDF - <a href="https://github.com/potyl/Talk-WebKit-Perl/blob/downloads/webkit-perl.pdf">https://github.com/potyl/Talk-WebKit-Perl/blob/downloads/webkit-perl.pdf</a></li>
+    </ul>
+</section>
+
+<section class="slide">
+    <h1>Questions ?</h1>
+</section>
+
+<form action="." method="get" class="goto-form">
+    <label for="goto-slide">Go to slide:</label>
+    <input type="number" name="slidenum" id="goto-slide">
+    <input type="submit" value="Go">
+</form>
+
+<a href="." title="Permalink to this slide" class="deck-permalink">#</a>
+
+
+<!-- Grab Google CDN's jQuery, with a protocol relative URL; fall back to local if offline -->
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.6.4/jquery.min.js"></script>
+<script>window.jQuery || document.write('<script src="js/jquery-1.6.4.min.js"><\/script>')</script>
+
+<!-- Deck Core and extensions -->
+<script src="core/deck.core.js"></script>
+<script src="extensions/menu/deck.menu.js"></script>
+<script src="extensions/goto/deck.goto.js"></script>
+<script src="extensions/status/deck.status.js"></script>
+<script src="extensions/navigation/deck.navigation.js"></script>
+<script src="extensions/hash/deck.hash.js"></script>
+
+<!-- Specific to this page -->
+<script src="js/main.js"></script>
+
+</body>
+</html>

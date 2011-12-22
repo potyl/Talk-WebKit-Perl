@@ -1,0 +1,142 @@
+.deck-container .theme-menu {
+  display: none;
+  position: fixed;
+  z-index: 3;
+  bottom: 10px;
+  left: 10px;
+  height: 20px;
+  line-height: 20px;
+  padding: 5px;
+  border: 1px solid #ddd;
+  -webkit-border-radius: 5px;
+  -moz-border-radius: 5px;
+  border-radius: 5px;
+  overflow: hidden;
+  background: #fff;
+  font-family: sans-serif;
+  color: #888;
+}
+.js .deck-container .theme-menu {
+  display: block;
+}
+.deck-container .theme-menu h2 {
+  float: left;
+  font-size: 20px;
+  border: 0;
+  padding: 5px 10px;
+  margin: 0;
+  height: 20px;
+  position: relative;
+  top: -5px;
+  left: -5px;
+  background: #ccc;
+  color: #444;
+  text-shadow: none;
+  font-family: sans-serif;
+  font-weight: bold;
+}
+.deck-container .theme-menu label {
+  float: left;
+  display: block;
+  font-size: 12px;
+  vertical-align: baseline;
+  margin: 0 4px 0 15px;
+}
+.deck-container .theme-menu select {
+  float: left;
+  display: block;
+  font-size: 14px;
+}
+
+.deck-container code
+{
+    color: black;
+}
+
+.deck-container .syntax-perl
+{
+    font-weight: bold;
+    color: purple;
+}
+
+.deck-container .syntax-comment
+{
+    font-style: italic;
+    color: green;
+}
+
+.deck-container .syntax-dancer
+{
+    font-weight: bold;
+    color: red;
+}
+
+.deck-container pre
+{
+    margin-top: 0;
+    margin-bottom: 0;
+    padding-top: 0;
+    padding-bottom: 0.25em;
+}
+
+.deck-container pre code
+{
+    font-size: 75%;
+    margin-top: 0px;
+}
+
+.boxshadow .deck-container blockquote:after
+{
+    content: "";
+    position: absolute;
+    z-index: -2;
+    top: 10px;
+    bottom: 10px;
+    left: 0;
+    right: 50%;
+    -moz-border-radius: 10px/100px;
+    border-radius: 10px/100px;
+    -webkit-box-shadow: 0 0 15px rgba(0, 0, 0, 0.6);
+    -moz-box-shadow: 0 0 15px rgba(0, 0, 0, 0.6);
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.6);
+}
+
+.deck-container blockquote::before {
+    content: "“";
+    position: absolute;
+    top: 0;
+    left: 0;
+    font-size: 3em;
+    line-height: 1;
+    color: #C00;
+    z-index: 1;
+}
+
+.deck-container blockquote {
+    font-family: "Hoefler Text", Constantia, Palatino, "Palatino Linotype", "Book Antiqua", Georgia, serif;
+    font-size: 2em;
+    padding: 1em 2em .5em 2em;
+    color: black;
+    background: white;
+    position: relative;
+    border: 1px solid #CDE;
+    z-index: auto;
+}
+
+.borderradius .deck-container blockquote {
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+    border-radius: 5px;
+}
+
+.deck-container h3,
+.deck-container h1
+{
+    color: #C00;
+}
+
+@media print {
+  .theme-menu {
+    display: none !important;
+  }
+}
